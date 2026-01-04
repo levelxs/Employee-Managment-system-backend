@@ -17,7 +17,7 @@ const nodemailer = require("nodemailer");
 //     });
 // };
 
-const sendEmail = async (to: string, subject: string, html: string) => {
+const sendEmail = async (to, subject, html) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
