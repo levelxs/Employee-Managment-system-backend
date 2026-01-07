@@ -95,3 +95,50 @@ exports.deleteEmploye = async function (req, res) {
         });
     }
 };
+
+//Employee dashboard data 
+exports.employeeDashboard = async (req, res) => {
+    try {
+        // 1️⃣ Total Employees
+        const totalEmployees = await Employee.countDocuments();
+
+        // 2️⃣ Status wise count
+        const activeEmployees = await Employee.countDocuments({ status: "Active" });
+        const inactiveEmployees = await Employee.countDocuments({ status: "Inactive" });
+
+        // 3️⃣ Total Salary (Revenue / Cost)
+        const salaryResult = await Employee.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalSalary: { $sum: "$salary" }
+                }
+            }
+        ]);
+
+        const totalSalary = salaryResult[0]?.totalSalary || 0;
+
+        // 4️⃣ All Employees (for table)
+        const employees = await Employee.find()
+            .sort({ createdAt: -1 })
+            .select("name email department salary status createdAt");
+
+        res.status(200).json({
+            success: true,
+            dashboard: {
+                totalEmployees,
+                activeEmployees,
+                inactiveEmployees,
+                totalSalary
+            },
+            employees
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Dashboard data fetch failed",
+            error: error.message
+        });
+    }
+};

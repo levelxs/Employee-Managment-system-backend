@@ -17,9 +17,14 @@
 //     });
 // };
 
+<<<<<<< HEAD
 
 
 // module.exports = sendEmail;
+=======
+// module.exports = sendEmail;
+
+>>>>>>> bd3e937 (make dashboard & report page dyanamic)
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (to, subject, html) => {
